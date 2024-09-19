@@ -11,6 +11,10 @@ on:
 env:
   GAR_REGISTRY: us-central1-docker.pkg.dev/follow-428106/follow
 
+permissions:
+  contents: read
+  id-token: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
