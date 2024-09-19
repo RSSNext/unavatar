@@ -2,7 +2,7 @@
   "name": "unavatar",
   "description": "Get unified user avatar from social networks, including Instagram, SoundCloud, Telegram, Twitter, YouTube & more.",
   "homepage": "https://unavatar.io",
-  "version": "3.6.7",
+  "version": "3.6.32",
   "main": "src/index.js",
   "bin": {
     "unavatar": "bin/server"
@@ -13,6 +13,10 @@
     "url": "https://kikobeats.com"
   },
   "contributors": [
+    {
+      "name": "Ben Croker",
+      "email": "57572400+bencroker@users.noreply.github.com"
+    },
     {
       "name": "David Refoua",
       "email": "David@Refoua.me"
@@ -54,6 +58,10 @@
       "email": "jahir.fiquitiva@gmail.com"
     },
     {
+      "name": "Mads Hougesen",
+      "email": "mads@mhouge.dk"
+    },
+    {
       "name": "ぶーと / Yoshiaki Ueda",
       "email": "oh@bootjp.me"
     },
@@ -87,29 +95,29 @@
     "youtube"
   ],
   "dependencies": {
-    "@keyvhq/compress": "~2.1.1",
-    "@keyvhq/core": "~2.1.0",
-    "@keyvhq/multi": "~2.1.0",
-    "@keyvhq/redis": "~2.1.0",
-    "@kikobeats/time-span": "~1.0.4",
-    "@microlink/mql": "~0.13.5",
-    "@microlink/ping-url": "~1.4.14",
-    "@microlink/ua": "~1.2.3",
-    "async-memoize-one": "~1.1.7",
-    "browserless": "~10.5.0",
+    "@keyvhq/compress": "~2.1.5",
+    "@keyvhq/core": "~2.1.1",
+    "@keyvhq/multi": "~2.1.5",
+    "@keyvhq/redis": "~2.1.5",
+    "@kikobeats/time-span": "~1.0.5",
+    "@microlink/mql": "~0.13.6",
+    "@microlink/ping-url": "~1.4.15",
+    "@microlink/ua": "~1.2.4",
+    "async-memoize-one": "~1.1.8",
+    "browserless": "~10.6.0",
     "cacheable-lookup": "~6.1.0",
-    "cacheable-response": "~2.10.1",
-    "cheerio": "~1.0.0-rc.12",
+    "cacheable-response": "~2.10.2",
+    "cheerio": "~1.0.0",
     "cors": "~2.8.5",
     "data-uri-regex": "~0.1.4",
     "data-uri-to-buffer": "~5.0.1",
-    "debug-logfmt": "~1.2.2",
+    "debug-logfmt": "~1.2.3",
     "frequency-counter": "~1.0.1",
     "got": "~11.8.6",
     "helmet": "~7.1.0",
-    "html-get": "~2.16.3",
-    "http-compression": "~1.0.19",
-    "https-tls": "~1.0.16",
+    "html-get": "~2.16.11",
+    "http-compression": "~1.0.20",
+    "https-tls": "~1.0.22",
     "ioredis": "~5.4.1",
     "is-absolute-url": "~3.0.3",
     "is-email-like": "~1.0.0",
@@ -121,15 +129,15 @@
     "p-cancelable": "2.1.1",
     "p-reflect": "~2.1.0",
     "p-timeout": "~4.1.0",
-    "puppeteer": "~22.8.0",
-    "rate-limiter-flexible": "~5.0.0",
-    "router-http": "~1.0.7",
+    "puppeteer": "~23.3.0",
+    "rate-limiter-flexible": "~5.0.3",
+    "router-http": "~1.0.8",
     "send-http": "~1.0.6",
-    "serve-static": "~1.15.0",
+    "serve-static": "~1.16.2",
     "srcset": "~4.0.0",
-    "tangerine": "~1.5.4",
-    "top-crawler-agents": "~1.0.26",
-    "top-user-agents": "~2.1.20",
+    "tangerine": "~1.5.9",
+    "top-crawler-agents": "~1.0.27",
+    "top-user-agents": "~2.1.23",
     "unique-random-array": "~2.0.0",
     "url-regex": "~5.0.0"
   },
@@ -152,7 +160,6 @@
     "gulp-postcss": "latest",
     "gulp-uglify": "latest",
     "nano-staged": "latest",
-    "npm-check-updates": "latest",
     "postcss": "latest",
     "postcss-focus": "latest",
     "simple-git-hooks": "latest",
@@ -162,7 +169,7 @@
     "untracked": "latest"
   },
   "engines": {
-    "node": ">= 20"
+    "node": "22"
   },
   "files": [
     "bin",
@@ -174,7 +181,7 @@
     "build": "gulp build && untracked > .vercelignore",
     "clean": "rm -rf node_modules",
     "contributors": "(npx git-authors-cli && npx finepack && git add package.json && git commit -m 'build: contributors' --no-verify) || true",
-    "dev": "TZ=UTC watchexec --clear=clear --on-busy-update=restart 'fkill \"Google Chrome for Testing\" --silent && node src/server.js'",
+    "dev": "TZ=UTC watchexec --clear=clear --on-busy-update=restart 'fkill \"Google Chrome for Testing\" --silent && NODE_OPTIONS='--no-deprecation' node src/server.js'",
     "dev:docker": "docker build --platform linux/amd64 -t unavatar . && docker run --platform linux/amd64 --name unavatar -e NODE_ENV=staging -p 3000:3000 --rm unavatar",
     "dev:docs": "concurrently \"npm run dev:docs:server\" \"npm run dev:docs:src\"",
     "dev:docs:server": "browser-sync start public --server public --files \"index.html, README.md, public/**/*.(css|js)\"",
@@ -182,16 +189,12 @@
     "lint": "standard-markdown && standard",
     "postinstall": "node node_modules/puppeteer/install.mjs",
     "postrelease": "npm run release:tags && npm run release:github",
-    "prerelease": "npm run update:check",
     "pretest": "npm run lint",
     "pretty": "prettier-standard index.js {core,test,bin}/**/*.js --single-quote",
     "release": "standard-version -a",
     "release:github": "github-generate-release",
     "release:tags": "git push --follow-tags origin HEAD:master",
-    "start": "NODE_ENV=production node src/server.js",
-    "test": "ava",
-    "update": "ncu -u",
-    "update:check": "ncu -- --error-level 2"
+    "test": "ava"
   },
   "private": true,
   "license": "MIT",

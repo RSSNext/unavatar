@@ -4,6 +4,7 @@ const debug = require('debug-logfmt')('unavatar:resolve')
 const reachableUrl = require('../util/reachable-url')
 const isAbsoluteUrl = require('is-absolute-url')
 const memoizeOne = require('async-memoize-one')
+const dataUriRegex = require('data-uri-regex')
 const { getTtl } = require('../send/cache')
 const isUrlHttp = require('is-url-http')
 const pTimeout = require('p-timeout')
@@ -50,6 +51,7 @@ const getDefaultFallbackUrl = ({ protocol, host }) =>
 const getFallbackUrl = memoizeOne(async ({ query, protocol, host }) => {
   const { fallback } = query
   if (fallback === false) return null
+  if (dataUriRegex().test(fallback)) return fallback
   if (!isUrlHttp(fallback) || !isAbsoluteUrl(fallback)) {
     return getDefaultFallbackUrl({ protocol, host })
   }
@@ -77,7 +79,9 @@ module.exports = fn => async (req, res) => {
 
   if (value === undefined) {
     const data = await getFallbackUrl({ query, protocol, host })
-    value = data ? { type: 'url', data } : null
+    value = data
+      ? { type: dataUriRegex().test(data) ? 'buffer' : 'url', data }
+      : null
   }
 
   return value

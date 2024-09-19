@@ -10,7 +10,7 @@ const providers = {
   gitlab: require('./gitlab'),
   google: require('./google'),
   gravatar: require('./gravatar'),
-  instagram: require('./instagram'),
+  // instagram: require('./instagram'),
   microlink: require('./microlink'),
   readcv: require('./readcv'),
   reddit: require('./reddit'),
@@ -19,7 +19,7 @@ const providers = {
   telegram: require('./telegram'),
   // tiktok: require('./tiktok'),
   twitch: require('./twitch'),
-  twitter: require('./twitter'),
+  x: require('./x'),
   youtube: require('./youtube')
 }
 
